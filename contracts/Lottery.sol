@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.7;
 
 contract Lottery {
     address owner;
@@ -12,6 +12,7 @@ contract Lottery {
         owner = msg.sender;
         maxTickets = _maxTickets;
         ticketPrice = _price;
+        ticketsAvailable = maxTickets;
     }
 
     modifier onlyOwner(){
@@ -23,6 +24,7 @@ contract Lottery {
         require(ticketsAvailable > 0, "No Tickets Available");
         require(msg.value >= ticketPrice, "Invalid amount sent");
         ticketBuyers.push(payable(msg.sender));
+        ticketsAvailable--;
     }
 
     function endGame() public payable {
@@ -42,5 +44,9 @@ contract Lottery {
         else {
             return "Game over!";
         }
+    }
+
+    function checkTicketsAvailable() public view returns (uint256) {
+        return ticketsAvailable;
     }
 }
